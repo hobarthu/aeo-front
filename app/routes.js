@@ -5,27 +5,6 @@ import hashHistory from './history'
 import App from './base'
 import Welcome from './pages/welcome'
 
-// 创建模板
-const create = (location, cb) => {
-  require.ensure([], (require) => {
-    cb(null, require('./pages/menu/create').default)
-  }, 'create')
-}
-
-// 表格列表
-const table = (location, cb) => {
-  require.ensure([], (require) => {
-    cb(null, require('./pages/menu/table').default)
-  }, 'table')
-}
-
-// 图表
-const echarts = (location, cb) => {
-  require.ensure([], (require) => {
-    cb(null, require('./pages/menu/echarts').default)
-  }, 'echarts')
-}
-
 // 登录
 const Login = (location, cb) => {
   require.ensure([], (require) => {
@@ -40,17 +19,18 @@ const Register = (location, cb) => {
   }, 'register')
 }
 
-// 测试
-const chat = (location, cb) => {
+// 创建模板
+const CreateTemplate = (location, cb) => {
   require.ensure([], (require) => {
-    cb(null, require('./pages/chat').default)
-  }, 'chat')
+    cb(null, require('./pages/template/create').default)
+  }, 'template/create')
 }
-// 编辑器
-const editor = (location, cb) => {
+
+// 模板列表
+const TemplatesList = (location, cb) => {
   require.ensure([], (require) => {
-    cb(null, require('./pages/menu/editor').default)
-  }, 'editor')
+    cb(null, require('./pages/template/list').default)
+  }, 'templates')
 }
 
 /* 进入路由的判断 */
@@ -66,11 +46,8 @@ export default () => (
   <Router history={hashHistory}>
     <Route path="/" component={App} onEnter={isLogin}>
       <IndexRoute component={Welcome} />
-      <Route path="/create" getComponent={create} />
-      <Route path="/table" getComponent={table} />
-      <Route path="/echarts" getComponent={echarts} />
-      <Route path="/editor" getComponent={editor} />
-      <Route path="/chat" getComponent={chat} />
+      <Route path="/template/create" getComponent={CreateTemplate} />
+      <Route path="/templates" getComponent={TemplatesList} />
     </Route>
     <Route path="/login" getComponent={Login} />
     <Route path="/register" getComponent={Register} />

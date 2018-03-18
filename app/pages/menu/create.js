@@ -2,8 +2,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Button, Spin, Form, Input, Table, Select, Collapse } from 'antd'
+import { Tooltip, Button, Spin, Form, Input, Table, Select, Collapse } from 'antd'
 import 'style/create.less'
+import * as _ from 'lodash'
+import { AeoButton } from '../index'
+
 import {
   fetchHouseCheckList,
 } from 'actions/house'
@@ -49,8 +52,27 @@ export default class app extends Component {
   }
 
   addFirstCategory = () => {
+    if (_.isEmpty(this.state.selectedCategory)) {
+      return;
+    }
+
     this.setState((prevState, props) => ({
-      firstCategories: prevState.firstCategories.concat([prevState.selectedCategory])
+      firstCategories: prevState.firstCategories.concat([{...prevState.selectedCategory, key: prevState.selectedCategory.key + prevState.firstCategories.length}])
+    }));
+
+    console.log('state:', this.state);
+  }
+
+  deleteFirstCategory = (category) => {
+    console.log('category', category);
+    let item = _.find(this.state.firstCategories, {key: category.key});
+
+    if (!item) {
+      return;
+    }
+
+    this.setState((prevState, props) => ({
+      firstCategories: _.without(this.state.firstCategories, item)
     }));
 
     console.log('state:', this.state);
@@ -66,14 +88,23 @@ export default class app extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const categoryItems = this.state.firstCategories.map((category) => {
+    const categoryItems = this.state.firstCategories.map((category, index) => {
       return (
-        <FormItem {...formTailLayout}>
-          <Collapse>
-            <Panel header={category.label} key={category.key}>
+        <FormItem className="first-category" {...formTailLayout} key={category.key}>
+          <Collapse style={{ width: '100%' }}>
+            <Panel header={category.label}>
               <p>{category.label}</p>
             </Panel>
           </Collapse>
+          <AeoButton
+            btnObj={
+              {
+                name: "删除",
+                btnClassName: 'delete-button', 
+                disable: false,
+                clickFunParams: category,
+              }
+            } clickFun={this.deleteFirstCategory}/>
         </FormItem>
       )
     })
@@ -100,7 +131,7 @@ export default class app extends Component {
             <Select
               labelInValue 
               showSearch
-              style={{ width: 300 }}
+              style={{ width: '100%' }}
               placeholder="请添加一级分类"
               optionFilterProp="children"
               onChange={this.handleChange}
@@ -113,7 +144,15 @@ export default class app extends Component {
               <Option value="customsContentReplace">海关文字替换信息</Option>
             </Select>
           )}
-          <Button className="add-button" onClick={this.addFirstCategory}>添加</Button>
+          <AeoButton
+            btnObj={
+              {
+                name: "添加",
+                btnClassName: 'add-button', 
+                disable: _.isEmpty(this.state.selectedCategory),
+                tooltip: "请选择一级分类"
+              }
+            } clickFun={this.addFirstCategory}/>
         </FormItem>
         {categoryItems}
         <FormItem {...formTailLayout}>

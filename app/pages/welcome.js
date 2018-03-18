@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { message } from 'antd'
-import { userInfo } from 'actions/common'
+import { templates } from 'actions/common'
 
 @connect((state, props) => ({
   config: state.config,
@@ -23,7 +23,7 @@ export default class welcome extends Component {
   }
 
   getUserInfo = () => {
-    this.props.dispatch(userInfo({}, (response) => {
+    this.props.dispatch(templates({}, (response) => {
       console.log(response)
     }, (response) => {
       message.warning(response)

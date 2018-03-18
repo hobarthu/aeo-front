@@ -1,11 +1,7 @@
 {
-  "name": "duxiaodu",
-  "version": "0.0.2",
-  "description": "duxiaodu",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/duxianwei520/react"
-  },
+  "name": "aeo",
+  "version": "0.0.1",
+  "description": "aeo",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --config ./scripts/webpack.dev.config.js",
@@ -14,12 +10,7 @@
     "mock": "supervisor -i node_modules mock/http.js",
     "chat": "node ./scripts/chatServer.js"
   },
-  "author": "duxiaodu",
-  "contributors": [
-    {
-      "name": "HanQ"
-    }
-  ],
+  "author": "bobo",
   "devDependencies": {
     "babel-core": "~6.26.0",
     "babel-eslint": "~8.2.1",
@@ -67,6 +58,7 @@
     "echarts": "4.0.2",
     "immutable": "~3.8.1",
     "isomorphic-fetch": "~2.2.1",
+    "lodash": "^4.17.5",
     "moment": "~2.20.1",
     "rc-queue-anim": "^1.4.1",
     "rc-tween-one": "~1.7.3",

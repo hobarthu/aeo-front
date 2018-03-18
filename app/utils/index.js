@@ -1,6 +1,7 @@
 import { message } from 'antd'
 import { hashHistory } from 'react-router'
 import * as ajaxFun from './ajax'
+import * as lodash from 'lodash'
 
 export const ajax = ajaxFun
 export function isArray(arr) {

@@ -6,6 +6,7 @@ import {
 } from 'redux'
 
 import tabListResult from './tabList'
+import templateResult from './template'
 
 // house
 import {
@@ -27,6 +28,8 @@ const rootReducer = combineReducers({
   houseCheckSearchResult,
   houseCheckSearchQuery,
   houseDetailResult,
+
+  templateResult
 
 
 });

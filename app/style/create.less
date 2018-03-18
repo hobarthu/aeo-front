@@ -1,22 +1,14 @@
 @import "./theme.less";
 @import "./mixins.less";
 
-.name-section, .first-category {
-    .flex;
-    .flex-align-center;
-    .name-label {
-        font-size: 14px;
-        margin-right: @space-base;
-    }
-}
-
 .create-form {
     margin-top: @space-lg;
     .first-category {
         .ant-form-item-control {
-            .flex;            
+            .flex;
+            .flex-align-center;           
         }
-        .add-button {
+        .add-button, .delete-button {
             margin-left: @space-base;
         }
     }
