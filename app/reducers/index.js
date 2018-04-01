@@ -5,32 +5,15 @@ import {
   combineReducers,
 } from 'redux'
 
-import tabListResult from './tabList'
-import templateResult from './template'
-
-// house
-import {
-  houseCheckSearchResult,
-  houseCheckSearchQuery,
-  houseDetailResult,
-} from './house'
-import {
-  loginResponse,
-} from './common'
+import { templateResult, getTemplateDetail, editTemplateForm } from './template'
 
 const rootReducer = combineReducers({
   routing,
   config: (state = {}) => state,
-  tabListResult,
 
-  loginResponse,
-
-  houseCheckSearchResult,
-  houseCheckSearchQuery,
-  houseDetailResult,
-
-  templateResult
-
+  templateResult,
+  getTemplateDetail,
+  editTemplateForm
 
 });
 

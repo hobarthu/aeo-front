@@ -21,6 +21,7 @@ const webpackConfigBase = {
     extensions: ['.js', '.json'],
     alias: {
       components: path.join(__dirname, '/../app/components'),
+      containers: path.join(__dirname, '/../app/containers'),
       actions: path.join(__dirname, '/../app/actions'),
       api: path.join(__dirname, '/../app/api'),
       reducers: path.join(__dirname, '/../app/reducers'),

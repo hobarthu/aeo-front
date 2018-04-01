@@ -1,23 +1,10 @@
 import React from 'react'
 import { Router, Route, IndexRoute } from 'react-router'
 import hashHistory from './history'
-
-import App from './base'
+import Templates from './pages/template/list'
 import Welcome from './pages/welcome'
 
-// 登录
-const Login = (location, cb) => {
-  require.ensure([], (require) => {
-    cb(null, require('./pages/login').default)
-  }, 'login')
-}
-
-// 注册
-const Register = (location, cb) => {
-  require.ensure([], (require) => {
-    cb(null, require('./pages/register').default)
-  }, 'register')
-}
+import App from './base'
 
 // 创建模板
 const CreateTemplate = (location, cb) => {
@@ -33,24 +20,21 @@ const TemplatesList = (location, cb) => {
   }, 'templates')
 }
 
-/* 进入路由的判断 */
-function isLogin(nextState, replaceState) {
-  const token = sessionStorage.getItem('token')
-  if (!token) {
-    replaceState('/login')
-    // hashHistory.push('/login')
-  }
+// 模板详情
+const TemplateDetail = (location, cb) => {
+  require.ensure([], (require) => {
+    cb(null, require('./pages/template/detail').default)
+  })
 }
 
 export default () => (
   <Router history={hashHistory}>
-    <Route path="/" component={App} onEnter={isLogin}>
+    <Route path="/" component={App}>
       <IndexRoute component={Welcome} />
       <Route path="/template/create" getComponent={CreateTemplate} />
       <Route path="/templates" getComponent={TemplatesList} />
+      <Route path="/template/detail/:templateId" getComponent={TemplateDetail} />
     </Route>
-    <Route path="/login" getComponent={Login} />
-    <Route path="/register" getComponent={Register} />
   </Router>
 )
 
