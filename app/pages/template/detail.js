@@ -62,11 +62,12 @@ export default class TemplateDetail extends Component {
 
   getTemplateDetail = () => {
     this.props.dispatch(getTemplateDetail({}, (response) => {
+      var response = JSON.parse(response);
       var template =  {
-        id: response.data.template.id,
-        name: response.data.template.name,
-        code: response.data.template.code,
-        industry: response.data.template.industry
+        id: response.data.id,
+        name: response.data.name,
+        code: response.data.code,
+        industry: response.data.industry
       };
       this.setState({
         template: template,
@@ -134,7 +135,7 @@ export default class TemplateDetail extends Component {
     return (
       <div className="detail-container">
         <TemplateDetail />
-        <EditTemplatePopover isEditMode={true} template={this.state.template}/>
+        <EditTemplatePopover template={this.state.template}/>
       </div>
     )
   }

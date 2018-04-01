@@ -24,6 +24,8 @@ const { TextArea } = Input;
     mapPropsToFields: (props) => {
         return {
             name: Form.createFormField({value: props.template.name}),
+            code: Form.createFormField({value: props.template.code}),
+            industry: Form.createFormField({value: props.template.industry}),
         }
     }
 })

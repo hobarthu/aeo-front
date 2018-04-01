@@ -17,8 +17,11 @@ class EditTemplatePopover extends React.Component {
           title="模板编辑"
           visible={this.props.visible}
           onOk={this.props.handleOk}
-          onCancel={this.props.handleCancel}>
-          <TemplateForm isEditMode={true} template={{}} />
+          onCancel={this.props.handleCancel}
+          cancelText="取消"
+          okText="保存"
+        >
+          <TemplateForm isEditMode={true} template={this.props.template} />
         </Modal>
       </div>
     );

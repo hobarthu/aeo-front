@@ -4,14 +4,13 @@ import { prefix, suffix, timeout } from '../config'
 
 const CancelToken = axios.CancelToken
 // axios配置
-const axiosBaseConfig = {
+const axiosBaseConfig = (method) => ({
   // baseURL: prefix,
   timeout: timeout,
   headers: {
       'Content-Type': 'application/json'
-
   },
-  method: 'post',
+  method: method,
   // 跨域请求，是否带上认证信息
   // withCredentials: true, // default
   // http返回的数据类型
@@ -45,21 +44,15 @@ const axiosBaseConfig = {
     }
     return respData
   }],
-}
+})
 // axios 实例
-const axiosInstance = axios.create(axiosBaseConfig)
+const axiosPostInstance = axios.create(axiosBaseConfig('post'))
+const axiosGetInstance = axios.create(axiosBaseConfig('get'))
 // 拦截器
-axiosInstance.interceptors.request.use((req) => {
+axiosPostInstance.interceptors.request.use((req) => {
   return req
 }, (error) => {
   // 当请求错误时
-  return Promise.reject(error)
-})
-
-axiosInstance.interceptors.response.use((resp) => {
-  return resp
-}, (error) => {
-  // 当返回错误时
   return Promise.reject(error)
 })
 
@@ -70,14 +63,28 @@ function axiosPost(url, reqData, target, handleCancel) {
   } else {
     newUrl = `${prefix}${url}${suffix}`
   }
-  return axiosInstance.post(newUrl, reqData, {
+  return axiosPostInstance.post(newUrl, reqData, {
     cancelToken: handleCancel ? handleCancel.token : undefined,
   })
 }
 
+function axiosGet(url, target, handleCancel) {
+    let newUrl
+    if (target) {
+        newUrl = `${target}${url}${suffix}`
+    } else {
+        newUrl = `${prefix}${url}${suffix}`
+    }
+    return axiosGetInstance.get(newUrl, {
+        cancelToken: handleCancel ? handleCancel.token : undefined,
+    })
+}
+
 const fetchJSONByPost = (url, target) => (reqData, handleCancel) => axiosPost(url, reqData, target, handleCancel)
+const fetchJSONByGet = (url, target) => (reqData, handleCancel) => axiosGet(url, target, handleCancel)
 
 export {
   fetchJSONByPost,
-  axiosBaseConfig,
+    fetchJSONByGet,
+  // axiosBaseConfig,
 }
