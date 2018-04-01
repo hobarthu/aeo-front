@@ -49,9 +49,7 @@ export default class Templates extends Component {
 
   getTemplates = () => {
     this.props.dispatch(getTemplatesList({}, (response) => {
-      var storedtemplates = JSON.parse(LocalStorage.getItem("templates"));
-      var templates = !_.isEmpty(storedtemplates) && storedtemplates || [];
-      this.setState({templates: templates.concat(response.data.list)});
+      this.setState({templates: JSON.parse(response).data});
     }, (response) => {
       message.warning(response)
     }))

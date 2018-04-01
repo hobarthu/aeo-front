@@ -41,16 +41,8 @@ class TemplateForm extends Component {
                     industry: this.props.form.getFieldValue("industry"),       
                 };
                 this.props.create(params);
-                // this.props.dispatch(createTemplate(params, (response) => {
-                // var storedtemplates = JSON.parse(LocalStorage.getItem("templates"));
-                // var templates = !_.isEmpty(storedtemplates) && storedtemplates || [];            
-                // LocalStorage.setItem("templates", JSON.stringify(templates.concat([{...params, id: response.data.id}])));
-                this.props.form.resetFields();
-                message.info("模板 " + params.name + " 创建成功！");
-                // }, (response) => {
-                // message.warning(response)
-                // }))
             }
+            
         });
     }
 
@@ -88,12 +80,14 @@ class TemplateForm extends Component {
                 })(
                     <TextArea rows={4} placeholder="请输入模板行业描述" />
                 )}
-                </FormItem>   
+                </FormItem> 
+                {!this.props.isEditMode && 
                 <FormItem style={{textAlign: 'right'}} {...formTailLayout}>
                     <Button type="primary" onClick={this.create}>
                         创建
                     </Button>
-                </FormItem> 
+                </FormItem>
+                }
             </div>
             )
     }
@@ -101,16 +95,25 @@ class TemplateForm extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log('state', state);
-    return {
-      visible: state.editTemplateForm.visible
-    }
-  }
+    console.log('aaaaaa', state);
+    console.log('this', this.props);
+
+}
   
   function mapDispatchToProps(dispatch, ownProps) {
     return {
       create: (params) => {
           console.log('mapDispatchToProps', params);
+          dispatch(createTemplate(params, (response) => {
+            console.log('response', response);
+            // var storedtemplates = JSON.parse(LocalStorage.getItem("templates"));
+            // var templates = !_.isEmpty(storedtemplates) && storedtemplates || [];            
+            // LocalStorage.setItem("templates", JSON.stringify(templates.concat([{...params, id: response.data.id}])));
+            // this.props.form.resetFields();
+            message.info("模板 " + params.name + " 创建成功！");
+            // }, (response) => {
+            // message.warning(response)
+            }));
       },
     }
   }

@@ -7,7 +7,10 @@ const CancelToken = axios.CancelToken
 const axiosBaseConfig = {
   // baseURL: prefix,
   timeout: timeout,
-  headers: { 'Content-Type': 'text/plain' },
+  headers: {
+      'Content-Type': 'application/json'
+
+  },
   method: 'post',
   // 跨域请求，是否带上认证信息
   // withCredentials: true, // default
