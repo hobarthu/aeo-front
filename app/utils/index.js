@@ -21,3 +21,4 @@ export const createAjaxAction = (httpHandle, startAction, endAction) => (reqData
         reject(error)
       })
   }
+  

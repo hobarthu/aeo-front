@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions'
+import { ajax } from 'utils'
 
 const initialState = {
   list: []
@@ -12,16 +13,16 @@ const templateResult = handleActions({
 }, initialState)
 
 const getTemplateDetail = handleActions({
-  'recevieTemplateDetail'(state, action) {
-    console.log('ss', action);
-    return {
-      id: "1001",
-      name: "模板1",
-      code: "CHNCHN",
-      industry: "建筑行业"
-     }
+  RECEVIE_TEMPLATE_DETAIL: (state, action) => {
+    var template =  {
+      id: action.payload.data.id,
+      name: action.payload.data.name,
+      code: action.payload.data.code,
+      industry: action.payload.data.industry
+    };
+    return {...state, template}
   }
-}, initialState)
+}, {})
 
 const editTemplateForm = handleActions({
   OPEN_EDIT_TEMPLATE_FORM: (state, action) => ({...state, visible: true }),

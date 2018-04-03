@@ -6,7 +6,8 @@ import 'style/template.less'
 import EditTemplatePopover from 'components/edit-template-popover'
 
 import {
-  getTemplateDetail,
+  templateDetail_get,
+  templateDetail_receive,
   editTemplateForm_open,
 } from 'actions/template'
 
@@ -43,82 +44,21 @@ var _getTemplateDetailFields = (template) => {
 }
 
 @Form.create({})
-@connect((state, props) => ({}),)
 
-export default class TemplateDetail extends Component {
+class TemplateDetail extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      template: {},
-      templateFields: [],
-      showEditTemplate: false
-    }
-
-    this.getTemplateDetail();
-  }
-
-  
-
-  getTemplateDetail = () => {
-    this.props.dispatch(getTemplateDetail({}, (response) => {
-      var response = JSON.parse(response);
-      var template =  {
-        id: response.data.id,
-        name: response.data.name,
-        code: response.data.code,
-        industry: response.data.industry
-      };
-      this.setState({
-        template: template,
-        templateFields: _getTemplateDetailFields(template)
-      });
-
-      this.props.form.setFieldsValue({
-        name: this.state.template.name,
-        code: this.state.template.code,
-        industry: this.state.template.industry,
-      });
-
-    }, (response) => {
-      message.warning(response)
-    }))
-  }
-
-  edit = () => {
-    this.props.dispatch(editTemplateForm_open());
-  }
-
-  hover = () => {
-
-  }
-
-  save = () => {
-    this.props.form.validateFields(
-      (err) => {
-        if (!err) {
-          console.info('success');
-          var params = {
-            name: this.props.form.getFieldValue("name"),
-            code: this.props.form.getFieldValue("code"),
-            industry: this.props.form.getFieldValue("industry"),       
-          };
-          message.info("模板 " + params.name + " 保存成功！");
-          this.setState({
-            isEditMode: false
-          });
-        }
-      }
-    );
+    this.props.getTemplateDetail(props.routeParams.templateId);
   }
 
   render() {
     const TemplateDetail = () => {
       return (
-        <Card title="模板描述" type="inner" extra={<a><Icon type="edit" onClick={this.edit} /></a>}>
+        <Card title="模板描述" type="inner" extra={<a><Icon type="edit" onClick={this.props.edit} /></a>}>
           <List
             itemLayout="horizontal"
-            dataSource={this.state.templateFields}
+            dataSource={this.props.templateFields}
             renderItem={item => (
               <List.Item>
                 <List.Item.Meta
@@ -135,8 +75,34 @@ export default class TemplateDetail extends Component {
     return (
       <div className="detail-container">
         <TemplateDetail />
-        <EditTemplatePopover template={this.state.template}/>
+        <EditTemplatePopover template={this.props.template}/>
       </div>
     )
   }
 }
+
+function mapStateToProps(state) {
+  console.log('aaaaaa', this.state, this.props);
+
+  return {
+    template: state.getTemplateDetail.template,
+    templateFields: _getTemplateDetailFields(state.getTemplateDetail.template)
+  };
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+  return {
+    getTemplateDetail: (id) => {
+      dispatch(templateDetail_get({id})).then((response) => {
+        if (response.data.success) {
+          dispatch(templateDetail_receive(response.data))
+        }
+      })
+    },
+    edit: () => {
+      dispatch(editTemplateForm_open());
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TemplateDetail);

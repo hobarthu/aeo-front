@@ -85,6 +85,6 @@ const fetchJSONByGet = (url, target) => (reqData, handleCancel) => axiosGet(url,
 
 export {
   fetchJSONByPost,
-    fetchJSONByGet,
+  fetchJSONByGet,
   // axiosBaseConfig,
 }

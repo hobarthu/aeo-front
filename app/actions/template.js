@@ -5,6 +5,7 @@ import {
 
 import {
     createAjaxAction,
+    ajax,
 } from 'utils'
   
 
@@ -14,9 +15,13 @@ export const getTemplatesList = createAjaxAction(template.getTemplates, requestT
 
 export const createTemplate = createAjaxAction(template.createTemplate);
 
-export const recevieTemplateDetail = createAction('recevieTemplateDetail')
-export const getTemplateDetail = createAjaxAction(template.getTemplateDetail, null, recevieTemplateDetail);
+// export const getTemplateDetail = createAction('GET_TEMPLATE_DETAIL');
 
 export const editTemplateForm_open = createAction('OPEN_EDIT_TEMPLATE_FORM')
-export const editTemplateForm_save = createAction('SAVE_EDIT_TEMPLATE_FORM')
+export const editTemplateForm_save = createAjaxAction(ajax.fetchJSONByPost('/aeo/config/template/update'));
 export const editTemplateForm_cancel = createAction('CANCEL_EDIT_TEMPLATE_FORM')
+
+
+export const templateDetail_get = (reqData) => ajax.fetchJSONByGet('/aeo/config/template/' + reqData.id);
+export const templateDetail_receive = createAction('RECEVIE_TEMPLATE_DETAIL')
+

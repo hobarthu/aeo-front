@@ -5,7 +5,8 @@ import * as _ from 'lodash'
 import { LocalStorage } from 'utils/localStorage'
 
 import {
-    createTemplate
+    createTemplate,
+    editTemplateForm_save,
   } from 'actions/template'
 
 const FormItem = Form.Item;
@@ -42,6 +43,8 @@ class TemplateForm extends Component {
                     code: this.props.form.getFieldValue("code"),
                     industry: this.props.form.getFieldValue("industry"),       
                 };
+
+                this.props.isEditMode && (params.id = this.props.template.id);
                 this.props.create(params);
             }
             
@@ -83,7 +86,17 @@ class TemplateForm extends Component {
                     <TextArea rows={4} placeholder="请输入模板行业描述" />
                 )}
                 </FormItem> 
-                {!this.props.isEditMode && 
+                {this.props.isEditMode && 
+                <FormItem style={{textAlign: 'right'}} {...formTailLayout}>
+                    <Button style={{marginRight: '10px'}} type="primary" onClick={this.create}>
+                        取消
+                    </Button>
+                    <Button type="primary" onClick={this.create}>
+                        保存
+                    </Button>
+                </FormItem>
+                }
+                {!this.props.isEditMode &&
                 <FormItem style={{textAlign: 'right'}} {...formTailLayout}>
                     <Button type="primary" onClick={this.create}>
                         创建
@@ -105,17 +118,29 @@ function mapStateToProps(state) {
   function mapDispatchToProps(dispatch, ownProps) {
     return {
       create: (params) => {
-          console.log('mapDispatchToProps', params);
-          dispatch(createTemplate(params, (response) => {
-            console.log('response', response);
-            // var storedtemplates = JSON.parse(LocalStorage.getItem("templates"));
-            // var templates = !_.isEmpty(storedtemplates) && storedtemplates || [];            
-            // LocalStorage.setItem("templates", JSON.stringify(templates.concat([{...params, id: response.data.id}])));
-            // this.props.form.resetFields();
-            message.info("模板 " + params.name + " 创建成功！");
-            // }, (response) => {
-            // message.warning(response)
-            }));
+
+          console.log('mapDispatchToProps', params, ownProps);
+          if (ownProps.isEditMode) {
+            dispatch(editTemplateForm_save(params, (response) => {
+                console.log('跟新', response);
+                  // this.props.form.resetFields();
+                  message.info("模板 " + params.name + " 更新成功！");
+                }, (response) => {
+                  message.warning(response)
+                })
+            );
+          } else {
+            dispatch(createTemplate(params, (response) => {
+                console.log('长江', response);
+                  // this.props.form.resetFields();
+                  message.info("模板 " + params.name + " 创建成功！");
+                }, (response) => {
+                  message.warning(response)
+                })
+            );
+          }
+
+          
       },
     }
   }

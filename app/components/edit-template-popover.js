@@ -20,6 +20,7 @@ class EditTemplatePopover extends React.Component {
           onCancel={this.props.handleCancel}
           cancelText="取消"
           okText="保存"
+          footer={null}
         >
           <TemplateForm isEditMode={true} template={this.props.template} />
         </Modal>
@@ -28,14 +29,15 @@ class EditTemplatePopover extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  console.log('state', state);
+function mapStateToProps(state, ownProps) {
+  console.log("ownProps", ownProps)
   return {
     visible: state.editTemplateForm.visible
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  console.log("ownProps2", ownProps)
   return {
     handleOk: () => dispatch(editTemplateForm_save()),
     handleCancel: () => dispatch(editTemplateForm_cancel()),
