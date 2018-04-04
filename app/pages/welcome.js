@@ -32,9 +32,9 @@ export default class welcome extends Component {
 
   render() {
     return (
-      <div className="welcome">
+      <div className="welcome" style={{'alignSelf': 'center'}}>
         <div className="content">
-          <h2 className="title" onClick={() => this.getUserInfo()}>欢迎来到华安模板配置平台，祝您工作顺利！</h2>
+          <h1 className="title" onClick={() => this.getUserInfo()}>欢迎来到华安平台，祝您工作顺利！</h1>
         </div>
       </div>
     )

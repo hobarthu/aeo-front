@@ -11,7 +11,7 @@ export default class Header extends Component {
           <div className="navbar-header">
             <Link to="/" className="navbar-brand">
               <div className="brand-title">
-                <span className="brand-text">模板配置</span>
+                <span className="brand-text">AEO</span>
               </div>
             </Link>
           </div>

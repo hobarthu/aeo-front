@@ -37,14 +37,13 @@ class TemplateForm extends Component {
             (err) => {
             if (!err) {
                 console.info('success');
-                
-                var params = {
-                    name: this.props.form.getFieldValue("name"),
-                    code: this.props.form.getFieldValue("code"),
-                    industry: this.props.form.getFieldValue("industry"),       
-                };
 
-                this.props.isEditMode && (params.id = this.props.template.id);
+                let params = new FormData();
+                params.append('name', this.props.form.getFieldValue("name"));
+                params.append('code', this.props.form.getFieldValue("code"));
+                params.append('industry', this.props.form.getFieldValue("industry"));
+
+                this.props.isEditMode && (params.append('industry', this.props.template.id));
                 this.props.create(params);
             }
             
@@ -118,8 +117,6 @@ function mapStateToProps(state) {
   function mapDispatchToProps(dispatch, ownProps) {
     return {
       create: (params) => {
-
-          console.log('mapDispatchToProps', params, ownProps);
           if (ownProps.isEditMode) {
             dispatch(editTemplateForm_save(params, (response) => {
                 console.log('跟新', response);

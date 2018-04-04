@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { message, Table } from 'antd'
 import * as _ from 'lodash'
 import { LocalStorage } from 'utils/localStorage'
+import moment from 'moment'
 
 import {
     getTemplatesList,
@@ -12,16 +13,32 @@ import {
 const columns = [{
   title: '名称',
   dataIndex: 'name',
-  sorter: (a, b) => a.name.length - b.name.length,
+  sorter: (a, b) => !a.name || !b.name || a.name.toUpperCase() - b.name.toUpperCase(),
 }, {
   title: '代号',
   dataIndex: 'code',
-  defaultSortOrder: 'descend',
-  sorter: (a, b) => a.code - b.code,
+  sorter: (a, b) => !a.code || !b.code || a.code.toUpperCase() - b.code.toUpperCase(),
 }, {
-  title: '行业描述',
+  title: '行业',
   dataIndex: 'industry',
-  sorter: (a, b) => a.address.length - b.address.length,
+  sorter: (a, b) => !a.industry || !b.industry || a.industry.toUpperCase() - b.industry.toUpperCase(),
+}, {
+  title: '海关文件',
+  dataIndex: 'haiguanUrl',
+  sorter: false,
+}, {
+  title: '审计文件',
+  dataIndex: 'shengjiUrl',
+  sorter: false,
+}, {
+  title: '创建时间',
+  dataIndex: 'createTime',
+  sorter: (a, b) => moment(a.createTime).unix() - moment(b.createTime).unix(),
+}, {
+  title: '更新时间',
+  dataIndex: 'updateTime',
+  defaultSortOrder: 'descend',
+  sorter: (a, b) => moment(a.updateTime).unix() - moment(b.updateTime).unix(),
 }, {
   title: '',
   dataIndex: 'actions',
@@ -39,9 +56,11 @@ const columns = [{
 export default class Templates extends Component {
 
   constructor(props) {
+    console.log('moment', moment('2018-04-01 13:55:09').unix());
     super(props)
     this.state = {
-      templates: []
+      templates: [],
+      isLoading: true
     }
 
     this.getTemplates();
@@ -50,14 +69,15 @@ export default class Templates extends Component {
   getTemplates = () => {
     this.props.dispatch(getTemplatesList({}, (response) => {
       if (response.success) {
-        this.setState({templates: response.data});
+          this.setState({templates: response.data, isLoading: false});
+
+        // setTimeout(function() {
+        //   this.setState({templates: response.data, isLoading: false});
+        // }, 3000);
       }
     }, (response) => {
       message.warning(response)
     }))
-  }
-
-  componentDidMount() {
   }
 
   render() {
@@ -67,7 +87,12 @@ export default class Templates extends Component {
 
     return (
       <div>
-        <Table columns={columns} dataSource={this.state.templates} onChange={onChange} />
+        <Table
+          rowKey={record => record.id} 
+          loading={this.state.isLoading} 
+          columns={columns} 
+          dataSource={this.state.templates} 
+          onChange={onChange} />
       </div>
     )
   }
