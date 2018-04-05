@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'style/create.less'
-import TemplateForm from 'components/template-form'
+import TemplateForm from 'containers/template-form'
 
 export default class CreateTemplate extends Component {
 

@@ -5,12 +5,11 @@ const initialState = {
   list: []
 }
 
-const templateResult = handleActions({
-  'receive templates list'(state, action) {
-    console.log('aa', state, action);
-    return { ...state, loading: false }
+const templatesList = handleActions({
+  'TEMPLATES_DETAIL'(state, action) {
+    return { ...state, templateId: action.payload}
   }
-}, initialState)
+}, {})
 
 const getTemplateDetail = handleActions({
   RECEVIE_TEMPLATE_DETAIL: (state, action) => {
@@ -21,7 +20,11 @@ const getTemplateDetail = handleActions({
       industry: action.payload.data.industry
     };
     return {...state, template}
-  }
+  },
+  TEMPLATEDETAIL_RECEIVE_FIRST_CATEGORIES: (state, action) => {
+    console.log('bobo', action);
+    return {...state, firstCategories: action.payload.res.data}
+  },
 }, {})
 
 const editTemplateForm = handleActions({
@@ -30,4 +33,15 @@ const editTemplateForm = handleActions({
   CANCEL_EDIT_TEMPLATE_FORM: (state, action) => ({ ...state, visible: false }),
 }, {})
 
-export { templateResult, getTemplateDetail, editTemplateForm }
+const AddPopover = handleActions({
+  ADDPOPOVER_OPEN: (state, action) => ({...state, visible: true }),
+  ADDPOPOVER_SAVE: (state, action) => ({...state, visible: false }),
+  ADDPOPOVER_CANCEL: (state, action) => ({...state, visible: false }),
+}, {})
+
+export {
+  AddPopover, 
+  templatesList, 
+  getTemplateDetail, 
+  editTemplateForm 
+}

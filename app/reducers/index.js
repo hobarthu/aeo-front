@@ -5,15 +5,20 @@ import {
   combineReducers,
 } from 'redux'
 
-import { templateResult, getTemplateDetail, editTemplateForm } from './template'
+import { 
+  templatesList, 
+  getTemplateDetail, 
+  editTemplateForm, 
+  AddPopover,
+} from './template'
 
 const rootReducer = combineReducers({
   routing,
   config: (state = {}) => state,
-
-  templateResult,
+  templatesList,
   getTemplateDetail,
-  editTemplateForm
+  editTemplateForm,
+  AddPopover,
 
 });
 
