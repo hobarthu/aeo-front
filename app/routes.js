@@ -18,7 +18,7 @@ const CreateTemplate = (location, cb) => {
 const TemplatesList = (location, cb) => {
   require.ensure([], (require) => {
     cb(null, require('./pages/template/list').default)
-  }, 'templates/list')
+  }, 'template/list')
 }
 
 // 模板详情

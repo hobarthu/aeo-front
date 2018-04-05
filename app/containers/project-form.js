@@ -22,6 +22,42 @@ const { TextArea } = Input;
 const Option = Select.Option;
 const CheckboxGroup = Checkbox.Group;
 
+export const options = [
+    { label: '报关', value: 'baoguan' },
+    { label: '仓储', value: 'cangchu' },
+    { label: '运输', value: 'yunshu' },
+    { label: '贸易', value: 'maoyi' },
+    { label: '生产', value: 'shengchan' },
+];
+
+export const treeData = [{
+    label: '高级认证',
+    value: '0-0',
+    key: '0-0',
+    children: [{
+        label: '复核验证',
+        value: '0-0-1',
+        key: '0-0-1',
+    }, {
+        label: '升级验证',
+        value: '0-0-2',
+        key: '0-0-2',
+    }],
+}, {
+    label: '一般认证',
+    value: '0-1',
+    key: '0-1',
+    children: [{
+        label: '复核验证',
+        value: '0-1-1',
+        key: '0-1-1',
+    }, {
+        label: '升级验证',
+        value: '0-1-2',
+        key: '0-1-2',
+    }],
+}];
+
 @Form.create({
     mapPropsToFields: (props) => {
         return {
@@ -61,43 +97,6 @@ class ProjectForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-
-        const options = [
-            { label: '报关', value: 'baoguan' },
-            { label: '仓储', value: 'cangchu' },
-            { label: '运输', value: 'yunshu' },
-            { label: '贸易', value: 'maoyi' },
-            { label: '生产', value: 'shengchan' },
-        ];
-
-        const treeData = [{
-            label: '高级认证',
-            value: '0-0',
-            key: '0-0',
-            children: [{
-                label: '复核验证',
-                value: '0-0-1',
-                key: '0-0-1',
-            }, {
-                label: '升级验证',
-                value: '0-0-2',
-                key: '0-0-2',
-            }],
-        }, {
-            label: 'Node2',
-            value: '0-1',
-            key: '0-1',
-            children: [{
-                label: '复核验证',
-                value: '0-1-1',
-                key: '0-1-1',
-            }, {
-                label: '升级验证',
-                value: '0-1-2',
-                key: '0-1-2',
-            }],
-        }];
-
         return (
             <div>
                 <FormItem {...formItemLayout} label="公司名称：">
