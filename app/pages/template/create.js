@@ -3,7 +3,6 @@ import 'style/create.less'
 import TemplateForm from 'containers/template-form'
 
 export default class CreateTemplate extends Component {
-
   render() {
     return (
       <div className="create-form">

@@ -10,16 +10,16 @@ export default (() => {
     // 系统一二级菜单
     global.nav = [
       {
-        id: 600110230,
+        id: 1001,
         name: '模板管理',
         icon: 'book',
         url: '',
         children: [
           {
-            id: 600110231, name: '创建模板', url: 'template/create', icon: 'user'
+            id: 1002, name: '创建模板', url: 'template/create', icon: 'user'
           },
           {
-            id: 600110232, name: '模板列表', url: 'templates', icon: 'book'
+            id: 1003, name: '模板列表', url: 'template/list', icon: 'book'
           }
         ]
       }

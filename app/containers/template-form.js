@@ -36,15 +36,19 @@ class TemplateForm extends Component {
         this.props.form.validateFields(
             (err) => {
             if (!err) {
-                console.info('success');
-
                 let params = new FormData();
                 params.append('name', this.props.form.getFieldValue("name"));
                 params.append('code', this.props.form.getFieldValue("code"));
                 params.append('industry', this.props.form.getFieldValue("industry"));
 
                 this.props.isEditMode && (params.append('industry', this.props.template.id));
-                this.props.create(params);
+                this.props.create(params, (response) => {
+                    console.log('长江', response);
+                        this.props.form.resetFields();
+                        message.info("模板 " + params.name + " 创建成功！");
+                    }, (response) => {
+                        message.warning(response)
+                    });
             }
             
         });
@@ -105,41 +109,29 @@ class TemplateForm extends Component {
             </div>
             )
     }
-
 }
 
 function mapStateToProps(state) {
-    console.log('aaaaaa', state);
-    console.log('this', this.props);
     return state;
 }
   
 function mapDispatchToProps(dispatch, ownProps) {
-return {
-    create: (params) => {
-        if (ownProps.isEditMode) {
-        dispatch(editTemplateForm_save(params, (response) => {
-            console.log('跟新', response);
-                // this.props.form.resetFields();
-                message.info("模板 " + params.name + " 更新成功！");
-            }, (response) => {
-                message.warning(response)
-            })
-        );
-        } else {
-        dispatch(createTemplate(params, (response) => {
-            console.log('长江', response);
-                // this.props.form.resetFields();
-                message.info("模板 " + params.name + " 创建成功！");
-            }, (response) => {
-                message.warning(response)
-            })
-        );
-        }
-
-        
-    },
-}
+    return {
+        create: (params, successHandler, errorHandler) => {
+            if (ownProps.isEditMode) {
+                dispatch(editTemplateForm_save(params, (response) => {
+                    console.log('跟新', response);
+                        // this.props.form.resetFields();
+                        message.info("模板保存成功！");
+                    }, (response) => {
+                        message.warning(response)
+                    })
+                );
+            } else {
+                dispatch(createTemplate(params, successHandler, errorHandler));
+            }      
+        },
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemplateForm);

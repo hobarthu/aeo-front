@@ -26,7 +26,11 @@ export default class LeftNav extends Component {
         mode="inline">
         <SubMenu key="sub1" title={<span><Icon type="setting" /><span>模板管理</span></span>}>
             <Menu.Item key="/template/create">创建模板</Menu.Item>
-            <Menu.Item key="/templates">模板列表</Menu.Item>
+            <Menu.Item key="/template/list">模板列表</Menu.Item>
+        </SubMenu>
+        <SubMenu key="sub2" title={<span><Icon type="setting" /><span>立项管理</span></span>}>
+            <Menu.Item key="/project/create">创建项目</Menu.Item>
+            <Menu.Item key="/project/list">项目列表</Menu.Item>
         </SubMenu>
       </Menu>
     )

@@ -42,11 +42,11 @@ class Templates extends Component {
       }, {
         title: '创建时间',
         dataIndex: 'createTime',
+        defaultSortOrder: 'descend',
         sorter: (a, b) => moment(a.createTime).unix() - moment(b.createTime).unix(),
       }, {
         title: '更新时间',
         dataIndex: 'updateTime',
-        defaultSortOrder: 'descend',
         sorter: (a, b) => moment(a.updateTime).unix() - moment(b.updateTime).unix(),
       }, {
         title: '',
