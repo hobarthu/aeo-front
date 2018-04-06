@@ -43,6 +43,13 @@ const ProjectList = (location, cb) => {
     cb(null, require('./pages/project/list').default)
   })
 }
+
+// 模板详情
+const ProjectDetail = (location, cb) => {
+  require.ensure([], (require) => {
+    cb(null, require('./pages/project/detail').default)
+  })
+}
 // ###立项管理###
 
 export default () => (
@@ -54,6 +61,7 @@ export default () => (
       <Route path="/template/detail/:templateId" getComponent={TemplateDetail} />
       <Route path="/project/create" getComponent={CreateProject} />
       <Route path="/project/list" getComponent={ProjectList} />
+      <Route path="/project/detail/:projectId" getComponent={ProjectDetail} />
     </Route>
   </Router>
 )

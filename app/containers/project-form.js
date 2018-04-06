@@ -6,6 +6,9 @@ import { LocalStorage } from 'utils/localStorage'
 
 import {
     project_create,
+    editProjectForm_save,
+    projectDetail_get,
+    projectDetail_receive,
   } from 'actions/project'
 
 const FormItem = Form.Item;
@@ -58,12 +61,26 @@ export const treeData = [{
     }],
 }];
 
+function prepareCompanyCategory(companyCategory) {
+    if (_.isEmpty(companyCategory)) {
+        return [];
+    } else {
+        return props.project.companyCategory.split(',');
+    }
+}
+
 @Form.create({
     mapPropsToFields: (props) => {
-        return {
-            // name: Form.createFormField({value: props.template.name}),
-            // code: Form.createFormField({value: props.template.code}),
-            // industry: Form.createFormField({value: props.template.industry}),
+        if (!_.isEmpty(props.project)) {
+            return {
+                companyName: Form.createFormField({value: props.project.companyName}),
+                year: Form.createFormField({value: props.project.year}),
+                companyCategory: Form.createFormField({value: !_.isEmpty(props.project.companyCategory) && props.project.companyCategory.split(',') || []}),
+                aeoCategory: Form.createFormField({value: props.project.aeoCategory}),
+                creditRating: Form.createFormField({value: props.project.creditRating}),
+            };
+        } else {
+            return {};
         }
     }
 })
@@ -83,13 +100,22 @@ class ProjectForm extends Component {
                     certificateTypeCategory: this.props.form.getFieldValue("creditRating"),
                 };
 
-                // this.props.isEditMode && (params.append('industry', this.props.template.id));
-                this.props.create(params, (response) => {
-                    this.props.form.resetFields();
-                    message.info("项目创建成功！");
-                }, (response) => {
-                    message.warning(response)
-                });
+                if (this.props.isEditMode) {
+                    params.id = this.props.project.id;
+                    this.props.create(params, (response) => {
+                        message.info("项目更新成功！");
+                        this.props.refreshProjectDetail();
+                    }, (response) => {
+                        message.warning(response)
+                    });
+                } else {
+                    this.props.create(params, (response) => {
+                        this.props.form.resetFields();
+                        message.info("项目创建成功！");
+                    }, (response) => {
+                        message.warning(response)
+                    });
+                }                
             }
             
         });
@@ -207,17 +233,18 @@ function mapDispatchToProps(dispatch, ownProps) {
 return {
     create: (params, successHandler, errorHandler) => {
         if (ownProps.isEditMode) {
-            dispatch(editTemplateForm_save(params, (response) => {
-                    // this.props.form.resetFields();
-                    message.info("模板 " + params.name + " 更新成功！");
-                }, (response) => {
-                    message.warning(response)
-                })
-            );
+            dispatch(editProjectForm_save(params, successHandler, errorHandler));
         } else {
             dispatch(project_create(params, successHandler, errorHandler));
         }
     },
+    refreshProjectDetail: () => {
+        dispatch(projectDetail_get({id: ownProps.project.id})).then((response) => {
+            if (response.data.success) {
+                dispatch(projectDetail_receive(response.data))
+            }
+        })
+    }
 }
 }
 

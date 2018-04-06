@@ -6,20 +6,24 @@ import {
 } from 'redux'
 
 import { 
-  templatesList, 
   getTemplateDetail, 
   editTemplateForm, 
   AddPopover,
 } from './template'
 
+import { 
+  getProjectDetail, 
+  editProjectForm, 
+} from './project'
+
 const rootReducer = combineReducers({
   routing,
   config: (state = {}) => state,
-  templatesList,
   getTemplateDetail,
   editTemplateForm,
   AddPopover,
-
+  getProjectDetail, 
+  editProjectForm,
 });
 
 export default rootReducer;

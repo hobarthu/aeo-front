@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { message, Table } from 'antd'
+import { Popconfirm, message, Table } from 'antd'
 import * as _ from 'lodash'
 import { LocalStorage } from 'utils/localStorage'
 import moment from 'moment'
@@ -9,12 +9,12 @@ import moment from 'moment'
 import {
     getTemplatesList,
     templates_detail,
+    templates_delete,
 } from 'actions/template'
 
 class Templates extends Component {
 
   constructor(props) {
-    console.log('moment', moment('2018-04-01 13:55:09').unix());
     super(props)
     this.state = {
       templates: [],
@@ -35,27 +35,38 @@ class Templates extends Component {
         title: '海关文件',
         dataIndex: 'haiguanUrl',
         sorter: false,
+        width: 100,
       }, {
         title: '审计文件',
         dataIndex: 'shengjiUrl',
         sorter: false,
+        width: 100,
       }, {
         title: '创建时间',
         dataIndex: 'createTime',
         defaultSortOrder: 'descend',
         sorter: (a, b) => moment(a.createTime).unix() - moment(b.createTime).unix(),
+        width: 110,
       }, {
         title: '更新时间',
         dataIndex: 'updateTime',
         sorter: (a, b) => moment(a.updateTime).unix() - moment(b.updateTime).unix(),
+        width: 110,
       }, {
         title: '',
         dataIndex: 'actions',
         render: (text, record) => (
           <span>
-            <Link to={"/template/detail/" + record.id} onClick={() => {console.log('rec', record); this.props.goToDetail(record.id)}}>查看</Link> | <a href="">删除</a>
+            <Link to={"/template/detail/" + record.id}>查看</Link> |&nbsp;
+            <Popconfirm 
+              title={'确定删除模板?'} 
+              onConfirm={() => {this.props.deleteTemplate(record.id, this.getTemplates)}}
+              okText="确定" cancelText="取消">
+              <a href="">删除</a>
+            </Popconfirm>
           </span>
         ),
+        width: 100,
       }]
     }
 
@@ -71,6 +82,12 @@ class Templates extends Component {
       message.warning(response)
     });
   }
+
+  // deleteTemplate = (id) => {
+  //   this.props.deleteTemplate(id, (response) => {
+  //     response.success && this.getTemplates();
+  //   })
+  // }
 
   render() {
     function onChange(pagination, filters, sorter) {
@@ -99,8 +116,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getTemplates: (successHandler, errorHandler) => {
       dispatch(getTemplatesList({}, successHandler, errorHandler));
     },
-    goToDetail: (id) => {
-      dispatch(templates_detail(id));
+    deleteTemplate: (id, successHandler) => {
+      dispatch(templates_delete({id})).then((response) => {        
+        response.data.success && successHandler();
+      });
     },
   }
 }

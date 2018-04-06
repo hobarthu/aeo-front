@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { message, Table } from 'antd'
+import { Popconfirm, message, Table } from 'antd'
 import * as _ from 'lodash'
-import { LocalStorage } from 'utils/localStorage'
+import { ProjectService } from 'utils/commonService'
 import moment from 'moment'
 
 import {
   project_list,
-  project_detail,
+  project_delete,
 } from 'actions/project'
-
-import {
-  options,
-  treeData,
-} from 'containers/project-form'
 
 class ProjectList extends Component {
 
@@ -36,43 +31,17 @@ class ProjectList extends Component {
         title: '业务种类',
         dataIndex: 'companyCategory',
         sorter: (a, b) => !a.companyCategory || !b.companyCategory || a.companyCategory.toUpperCase() - b.companyCategory.toUpperCase(),
-        render: (text, record, index) => {
-          let list = record.companyCategory && record.companyCategory.split(',') || [];
-          let displayList = []; 
-          _.map(options, (item) => {
-            if (list.indexOf(item.value) != -1) {
-              displayList = displayList.concat([item.label]);
-            }
-          });
-          return !_.isEmpty(displayList) && displayList.join(', ') || '';
-        }
+        render: (text, record, index) => ProjectService.getCompanyCategory(record)
       }, {
         title: '委托类型',
         dataIndex: 'aeoCategory',
         sorter: (a, b) => !a.aeoCategory || !b.aeoCategory || a.aeoCategory.toUpperCase() - b.aeoCategory.toUpperCase(),
-        render: (text, record, index) => {
-          var displayStr = '';
-          if (record.aeoCategory == 'kehu') {
-            displayStr = '客户委托';
-          } else if (record.aeoCategory == 'haiguan') {
-            displayStr = '海关委托';
-          }
-          return displayStr;
-        }
+        render: (text, record, index) => ProjectService.getAeoCategory(record)
       }, {
         title: '信用等级',
         dataIndex: 'creditRating',
         sorter: false,
-        render: (text, record, index) => {
-          let displayList = [];
-          let node = _.find(treeData, {value: record.certificateType});
-          if (node) {
-            displayList = displayList.concat([node.label]);
-            let child = _.find(node.children, {value: record.certificateTypeCategory});
-            child && (displayList = displayList.concat([child.label]));
-          }
-          return !_.isEmpty(displayList) && displayList.join(', ') || '';
-        }
+        render: (text, record, index) => ProjectService.getCreditRating(record)
       }, 
       
       // {
@@ -91,7 +60,13 @@ class ProjectList extends Component {
         dataIndex: 'actions',
         render: (text, record) => (
           <span>
-            <Link to={"/project/detail/" + record.id} onClick={() => {this.props.goToDetail(record.id)}}>查看</Link> | <a href="">删除</a>
+            <Link to={"/project/detail/" + record.id}>查看</Link> | &nbsp;
+            <Popconfirm 
+              title={'确定删除项目?'} 
+              onConfirm={() => {this.props.deleteProject(record.id, this.getProjects)}}
+              okText="确定" cancelText="取消">
+              <a href="">删除</a>
+            </Popconfirm>
           </span>
         ),
       }]
@@ -102,7 +77,6 @@ class ProjectList extends Component {
 
   getProjects = () => {
     this.props.getProjects((response) => {
-      console.log('res', response);
       if (response.success) {
         this.setState({projects: response.data, isLoading: false});
       }
@@ -134,8 +108,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getProjects: (successHandler, errorHandler) => {
       dispatch(project_list({}, successHandler, errorHandler));
     },
-    goToDetail: (id) => {
-      dispatch(project_detail(id));
+    deleteProject: (id, successHandler) => {
+      dispatch(project_delete({id})).then((response) => {        
+        response.data.success && successHandler();
+      });
     },
   }
 }

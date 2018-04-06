@@ -23,10 +23,14 @@ const { TextArea } = Input;
 
 @Form.create({
     mapPropsToFields: (props) => {
-        return {
-            name: Form.createFormField({value: props.template.name}),
-            code: Form.createFormField({value: props.template.code}),
-            industry: Form.createFormField({value: props.template.industry}),
+        if (!_.isEmpty(props.project)) {
+            return {
+                name: Form.createFormField({value: props.template.name}),
+                code: Form.createFormField({value: props.template.code}),
+                industry: Form.createFormField({value: props.template.industry}),
+            };
+        } else {
+            return {};
         }
     }
 })
@@ -41,7 +45,6 @@ class TemplateForm extends Component {
                 params.append('code', this.props.form.getFieldValue("code"));
                 params.append('industry', this.props.form.getFieldValue("industry"));
 
-                this.props.isEditMode && (params.append('industry', this.props.template.id));
                 this.props.create(params, (response) => {
                     console.log('长江', response);
                         this.props.form.resetFields();
@@ -49,6 +52,23 @@ class TemplateForm extends Component {
                     }, (response) => {
                         message.warning(response)
                     });
+
+                if (this.props.isEditMode) {
+                    params.append('id', this.props.template.id);
+                    this.props.create(params, (response) => {
+                        message.info("模板更新成功！");
+                        this.props.refreshTemplateDetail();
+                    }, (response) => {
+                        message.warning(response)
+                    });
+                } else {
+                    this.props.create(params, (response) => {
+                        this.props.form.resetFields();
+                        message.info("项目创建成功！");
+                    }, (response) => {
+                        message.warning(response)
+                    });
+                }          
             }
             
         });
@@ -119,18 +139,18 @@ function mapDispatchToProps(dispatch, ownProps) {
     return {
         create: (params, successHandler, errorHandler) => {
             if (ownProps.isEditMode) {
-                dispatch(editTemplateForm_save(params, (response) => {
-                    console.log('跟新', response);
-                        // this.props.form.resetFields();
-                        message.info("模板保存成功！");
-                    }, (response) => {
-                        message.warning(response)
-                    })
-                );
+                dispatch(editTemplateForm_save(params, successHandler, errorHandler));
             } else {
                 dispatch(createTemplate(params, successHandler, errorHandler));
             }      
         },
+        refreshTemplateDetail: () => {
+            dispatch(templateDetail_get({id: ownProps.template.id})).then((response) => {
+                if (response.data.success) {
+                    dispatch(templateDetail_receive(response.data))
+                }
+            });
+        }
     }
 }
 

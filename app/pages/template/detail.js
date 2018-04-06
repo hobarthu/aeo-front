@@ -33,19 +33,19 @@ var _getTemplateDetailFields = (template) => {
   _.forEach(template, function(value, key) {
     switch (key) {
       case 'name':
-        fields = fields.concat([{title: "名称", content: value}]);
+        fields = fields.concat([{title: "名称", content: value, order: 1}]);
         break;
       case 'code':        
-        fields = fields.concat([{title: "代号", content: value}]);
+        fields = fields.concat([{title: "代号", content: value, order: 2}]);
         break;
       case 'industry':               
-        fields = fields.concat([{title: "行业", content: value}]);
+        fields = fields.concat([{title: "行业", content: value, order: 3}]);
         break;
       default:
         break;
     }
   });
-  return fields;
+  return _.sortBy(fields, 'order');
 }
 
 @Form.create({})

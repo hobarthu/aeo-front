@@ -5,12 +5,6 @@ const initialState = {
   list: []
 }
 
-const templatesList = handleActions({
-  'TEMPLATES_DETAIL'(state, action) {
-    return { ...state, templateId: action.payload}
-  }
-}, {})
-
 const getTemplateDetail = handleActions({
   RECEVIE_TEMPLATE_DETAIL: (state, action) => {
     var template =  {
@@ -22,7 +16,6 @@ const getTemplateDetail = handleActions({
     return {...state, template}
   },
   TEMPLATEDETAIL_RECEIVE_FIRST_CATEGORIES: (state, action) => {
-    console.log('bobo', action);
     return {...state, firstCategories: action.payload.res.data}
   },
 }, {})
@@ -41,7 +34,6 @@ const AddPopover = handleActions({
 
 export {
   AddPopover, 
-  templatesList, 
   getTemplateDetail, 
   editTemplateForm 
 }
