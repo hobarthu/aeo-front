@@ -59,7 +59,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     handleOk: (name) => {
       dispatch(AddPopover_save());
-      ownProps.save(name);
+      ownProps.save(name, ownProps.parentId);
       console.log("ownProps", ownProps);
       
     },

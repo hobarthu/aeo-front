@@ -55,7 +55,36 @@ class TemplateDetail extends Component {
   constructor(props) {
     super(props)
     this.props.getTemplateDetail(props.routeParams.templateId);
-    this.props.getFirstCategories(props.routeParams.templateId)
+    this.props.getFirstCategories(props.routeParams.templateId);
+    this.state = {
+      addPopover: {
+        title: '添加一级分类',
+        SaveFun: this.props.saveFirstCategory,
+        parentId: this.props.routeParams.templateId
+      }
+    }
+  }
+
+  addFirstCategory = () => {
+    this.setState({
+      addPopover: {
+        title: '添加一级分类',
+        saveFun: this.props.saveFirstCategory,
+        parentId: this.props.routeParams.templateId
+      }
+    });
+    this.props.openAddPopover();
+  }
+
+  addSecondCategory = (id) => {
+    this.setState({
+      addPopover: {
+        title: '添加二级分类',
+        saveFun: this.props.saveSecondCategory,
+        parentId: id
+      }
+    });
+    this.props.openAddPopover();
   }
 
   render() {
@@ -80,10 +109,9 @@ class TemplateDetail extends Component {
     const Category = () => {
       return (
         <div>
-          <Card title="分类: " type="inner" extra={<a><Icon type="plus" onClick={this.props.addFirstCategory} /></a>}>
+          <Card title="分类: " type="inner" extra={<a><Icon type="plus" onClick={this.addFirstCategory} /></a>}>
             <FirstCategories />
           </Card>
-          <AddPopover title='添加一级分类' save={this.props.saveFirstCategory} />
         </div>
       )
     } 
@@ -91,7 +119,7 @@ class TemplateDetail extends Component {
     const FirstCategories = () => (
       _.map(this.props.firstCategories, (item) => {
         return (
-          <Card key={item.id} title={item.name} type="inner" extra={<a><Icon type="plus" /></a>}></Card>
+          <Card key={item.id} title={item.name} type="inner" extra={<a><Icon type="plus" onClick={() => this.addSecondCategory(item.id)} /></a>}></Card>
         )
     }));
 
@@ -100,6 +128,7 @@ class TemplateDetail extends Component {
         <Detail />
         <EditTemplatePopover template={this.props.template}/>
         <Category />
+        <AddPopover title={this.state.addPopover.title} save={this.state.addPopover.saveFun} parentId={this.state.addPopover.parentId}/>
       </div>
     )
   }
@@ -127,12 +156,12 @@ function mapDispatchToProps(dispatch, ownProps) {
     edit: () => {
       dispatch(editTemplateForm_open());
     },
-    addFirstCategory: () => {
+    openAddPopover: () => {
       dispatch(AddPopover_open());
     },
-    saveFirstCategory: (name) => {
+    saveFirstCategory: (name, id) => {
       let params = {
-        templateId: ownProps.routeParams.templateId,
+        templateId: id,
         name,
       };
       dispatch(templateDetail_saveFirstCategory(params, (response) => {
@@ -144,7 +173,7 @@ function mapDispatchToProps(dispatch, ownProps) {
                   {
                     "condition": "template_id=",
                     "singleValue":true,
-                    "value": ownProps.routeParams.templateId
+                    "value": id
                   }
                 ]
               }
@@ -169,7 +198,47 @@ function mapDispatchToProps(dispatch, ownProps) {
         ]
       };
       dispatch(templateDetail_getFirstCategories(criteria));
-    }
+    },
+    saveSecondCategory: (name) => {
+      let params = {
+        templateId: ownProps.routeParams.templateId,
+        name,
+      };
+      dispatch(templateDetail_saveFirstCategory(params, (response) => {
+        if (response.success) {
+          let criteria = {
+            "oredCriteria": [
+              {
+                "criteria": [
+                  {
+                    "condition": "template_id=",
+                    "singleValue":true,
+                    "value": ownProps.routeParams.templateId
+                  }
+                ]
+              }
+            ]
+          };
+          dispatch(templateDetail_getFirstCategories(criteria));
+        }
+      }))
+    },
+    getSecondCategories: (id) => {
+      let criteria = {
+        "oredCriteria": [
+          {
+            "criteria": [
+              {
+                "condition": "template_id=",
+                "singleValue":true,
+                "value": id
+              }
+            ]
+          }
+        ]
+      };
+      dispatch(templateDetail_getFirstCategories(criteria));
+    },
   }
 }
 

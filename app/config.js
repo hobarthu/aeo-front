@@ -5,7 +5,7 @@ export default (() => {
     global.linkUrl = 'http://39.106.180.208:8088';
     // global.linkUrl = 'http://localhost:3030';
     if (process.env.NODE_ENV === 'production') { // 生产环境用不同的接口地址
-      global.linkUrl = 'http://localhost:3000';
+      global.linkUrl = 'http://39.106.180.208:8088';
     }
     // 系统一二级菜单
     global.nav = [

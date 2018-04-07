@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { message, Tooltip, Button, Spin, Form, Input, Table } from 'antd'
+import { Upload, Icon, message, Tooltip, Button, Spin, Form, Input, Table } from 'antd'
 import * as _ from 'lodash'
 import { LocalStorage } from 'utils/localStorage'
 
@@ -36,6 +36,11 @@ const { TextArea } = Input;
 })
 
 class TemplateForm extends Component {
+    state = {
+        haiguanFileList: [],
+        shengjiFileList: [],
+    }
+
     create = () => {
         this.props.form.validateFields(
             (err) => {
@@ -44,14 +49,8 @@ class TemplateForm extends Component {
                 params.append('name', this.props.form.getFieldValue("name"));
                 params.append('code', this.props.form.getFieldValue("code"));
                 params.append('industry', this.props.form.getFieldValue("industry"));
-
-                this.props.create(params, (response) => {
-                    console.log('长江', response);
-                        this.props.form.resetFields();
-                        message.info("模板 " + params.name + " 创建成功！");
-                    }, (response) => {
-                        message.warning(response)
-                    });
+                params.append('shengjiFile', this.props.form.getFieldValue("shengjiFile").file);
+                params.append('haiguanFile', this.props.form.getFieldValue("haiguanFile").file);
 
                 if (this.props.isEditMode) {
                     params.append('id', this.props.template.id);
@@ -64,18 +63,58 @@ class TemplateForm extends Component {
                 } else {
                     this.props.create(params, (response) => {
                         this.props.form.resetFields();
-                        message.info("项目创建成功！");
+                        this.setState({haiguanFileList: [], shengjiFileList: [],});
+                        message.info("模板创建成功！");
                     }, (response) => {
                         message.warning(response)
                     });
                 }          
             }
-            
         });
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
+
+        const haiguanFileOptions = {
+            onRemove: (file) => {
+              this.setState(({ haiguanFileList }) => {
+                const index = haiguanFileList.indexOf(file);
+                const newFileList = haiguanFileList.slice();
+                newFileList.splice(index, 1);
+                return {
+                    haiguanFileList: newFileList,
+                };
+              });
+            },
+            beforeUpload: (file) => {
+              this.setState(({ haiguanFileList }) => ({
+                haiguanFileList: [...haiguanFileList, file],
+              }));
+              return false;
+            },
+            fileList: this.state.haiguanFileList,
+        };
+
+        const shengjiFileOptions = {
+            onRemove: (file) => {
+              this.setState(({ shengjiFileList }) => {
+                const index = shengjiFileList.indexOf(file);
+                const newFileList = shengjiFileList.slice();
+                newFileList.splice(index, 1);
+                return {
+                    shengjiFileList: newFileList,
+                };
+              });
+            },
+            beforeUpload: (file) => {
+              this.setState(({ shengjiFileList }) => ({
+                shengjiFileList: [...shengjiFileList, file],
+              }));
+              return false;
+            },
+            fileList: this.state.shengjiFileList,
+        };
 
         return (
             <div>
@@ -107,6 +146,34 @@ class TemplateForm extends Component {
                     }],
                 })(
                     <TextArea rows={4} placeholder="请输入模板行业描述" />
+                )}
+                </FormItem> 
+                <FormItem {...formItemLayout} label="审计文件：">
+                {getFieldDecorator('shengjiFile', {
+                    rules: [{
+                    required: true,
+                    message: '请添加审计文件',
+                    }],
+                })(
+                    <Upload {...shengjiFileOptions}>
+                        <Button>
+                        <Icon type="upload" /> 选择文件
+                        </Button>
+                    </Upload>
+                )}
+                </FormItem>
+                <FormItem {...formItemLayout} label="海关文件：">
+                {getFieldDecorator('haiguanFile', {
+                    rules: [{
+                    required: true,
+                    message: '请添加海关文件',
+                    }],
+                })(
+                    <Upload {...haiguanFileOptions}>
+                        <Button>
+                        <Icon type="upload" /> 选择文件
+                        </Button>
+                    </Upload>
                 )}
                 </FormItem> 
                 {this.props.isEditMode && 
