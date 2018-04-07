@@ -7,13 +7,7 @@ const initialState = {
 
 const getTemplateDetail = handleActions({
   RECEVIE_TEMPLATE_DETAIL: (state, action) => {
-    var template =  {
-      id: action.payload.data.id,
-      name: action.payload.data.name,
-      code: action.payload.data.code,
-      industry: action.payload.data.industry
-    };
-    return {...state, template}
+    return {...state, template: action.payload.data}
   },
   TEMPLATEDETAIL_RECEIVE_FIRST_CATEGORIES: (state, action) => {
     return {...state, firstCategories: action.payload.res.data}

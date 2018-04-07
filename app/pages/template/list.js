@@ -32,13 +32,13 @@ class Templates extends Component {
         dataIndex: 'industry',
         sorter: (a, b) => !a.industry || !b.industry || a.industry.toUpperCase() - b.industry.toUpperCase(),
       }, {
-        title: '海关文件',
-        dataIndex: 'haiguanUrl',
+        title: '审计文件',
+        dataIndex: 'shengjiUrl',
         sorter: false,
         width: 100,
       }, {
-        title: '审计文件',
-        dataIndex: 'shengjiUrl',
+        title: '海关文件',
+        dataIndex: 'haiguanUrl',
         sorter: false,
         width: 100,
       }, {

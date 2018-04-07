@@ -20,6 +20,8 @@ export const templateDetail_get = (reqData) => ajax.fetchJSONByGet('/aeo/config/
 export const templateDetail_receive = createAction('RECEVIE_TEMPLATE_DETAIL')
 export const templateDetail_saveFirstCategory = createAjaxAction(ajax.fetchJSONByPost('/aeo/config/category1/add'));
 export const templateDetail_getFirstCategories = createAjaxAction(ajax.fetchJSONByPost('/aeo/config/category1'), null, createAction('TEMPLATEDETAIL_RECEIVE_FIRST_CATEGORIES'));
+export const templateDetail_saveSecondCategory = createAjaxAction(ajax.fetchJSONByPost('/aeo/config/category2/add'));
+export const templateDetail_getSecondCategories = createAjaxAction(ajax.fetchJSONByPost('/aeo/config/category2'), null, createAction('TEMPLATEDETAIL_RECEIVE_SECOND_CATEGORIES'));
 
 export const templates_delete = (reqData) => ajax.fetchJSONByPost('/aeo/config/template/delete/' + reqData.id);
 

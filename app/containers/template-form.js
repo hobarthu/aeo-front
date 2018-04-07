@@ -23,11 +23,18 @@ const { TextArea } = Input;
 
 @Form.create({
     mapPropsToFields: (props) => {
-        if (!_.isEmpty(props.project)) {
+        console.log("11", this);
+
+        const shengjiFile = new File([""], props.template.shengjiUrl);
+        const haiguanFile = new File([""], props.template.haiguanUrl);
+        
+        if (!_.isEmpty(props.template)) {
             return {
                 name: Form.createFormField({value: props.template.name}),
                 code: Form.createFormField({value: props.template.code}),
                 industry: Form.createFormField({value: props.template.industry}),
+                shengjiUrl: Form.createFormField({value: {file: shengjiFile, fileList: [shengjiFile]}}),
+                haiguanUrl: Form.createFormField({value: {file: haiguanFile, fileList: [haiguanFile]}}),
             };
         } else {
             return {};
@@ -36,9 +43,23 @@ const { TextArea } = Input;
 })
 
 class TemplateForm extends Component {
-    state = {
-        haiguanFileList: [],
-        shengjiFileList: [],
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            haiguanFileList: [{
+                uid: -1,
+                name: props.template.haiguanUrl,
+                status: 'done',
+                url: '',
+              }],
+            shengjiFileList: [{
+                uid: -2,
+                name: props.template.shengjiUrl,
+                status: 'done',
+                url: '',
+              }],
+        }     
     }
 
     create = () => {
@@ -52,23 +73,25 @@ class TemplateForm extends Component {
                 params.append('shengjiFile', this.props.form.getFieldValue("shengjiFile").file);
                 params.append('haiguanFile', this.props.form.getFieldValue("haiguanFile").file);
 
-                if (this.props.isEditMode) {
-                    params.append('id', this.props.template.id);
-                    this.props.create(params, (response) => {
-                        message.info("模板更新成功！");
-                        this.props.refreshTemplateDetail();
-                    }, (response) => {
-                        message.warning(response)
-                    });
-                } else {
-                    this.props.create(params, (response) => {
-                        this.props.form.resetFields();
-                        this.setState({haiguanFileList: [], shengjiFileList: [],});
-                        message.info("模板创建成功！");
-                    }, (response) => {
-                        message.warning(response)
-                    });
-                }          
+                console.log(this.props.form.getFieldValue("haiguanFile"));
+
+                // if (this.props.isEditMode) {
+                //     params.append('id', this.props.template.id);
+                //     this.props.create(params, (response) => {
+                //         message.info("模板更新成功！");
+                //         this.props.refreshTemplateDetail();
+                //     }, (response) => {
+                //         message.warning(response)
+                //     });
+                // } else {
+                //     this.props.create(params, (response) => {
+                //         this.props.form.resetFields();
+                //         this.setState({haiguanFileList: [], shengjiFileList: [],});
+                //         message.info("模板创建成功！");
+                //     }, (response) => {
+                //         message.warning(response)
+                //     });
+                // }          
             }
         });
     }
@@ -93,11 +116,13 @@ class TemplateForm extends Component {
               }));
               return false;
             },
+            multiple: false,
             fileList: this.state.haiguanFileList,
+            defaultFileList: this.state.haiguanFileList
         };
 
         const shengjiFileOptions = {
-            onRemove: (file) => {
+            onRemove: (file) => {                
               this.setState(({ shengjiFileList }) => {
                 const index = shengjiFileList.indexOf(file);
                 const newFileList = shengjiFileList.slice();
@@ -113,7 +138,9 @@ class TemplateForm extends Component {
               }));
               return false;
             },
+            multiple: false,
             fileList: this.state.shengjiFileList,
+            defaultFileList: this.state.shengjiFileList
         };
 
         return (
@@ -155,8 +182,10 @@ class TemplateForm extends Component {
                     message: '请添加审计文件',
                     }],
                 })(
-                    <Upload {...shengjiFileOptions}>
-                        <Button>
+                    <Upload {...shengjiFileOptions} 
+                        disabled={this.state.shengjiFileList.length>0}
+                        >
+                        <Button>    
                         <Icon type="upload" /> 选择文件
                         </Button>
                     </Upload>
@@ -169,7 +198,7 @@ class TemplateForm extends Component {
                     message: '请添加海关文件',
                     }],
                 })(
-                    <Upload {...haiguanFileOptions}>
+                    <Upload {...haiguanFileOptions} disabled={this.state.haiguanFileList.length>0}>
                         <Button>
                         <Icon type="upload" /> 选择文件
                         </Button>

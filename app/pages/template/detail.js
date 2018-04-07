@@ -41,6 +41,12 @@ var _getTemplateDetailFields = (template) => {
       case 'industry':               
         fields = fields.concat([{title: "行业", content: value, order: 3}]);
         break;
+      case 'shengjiUrl':               
+        fields = fields.concat([{title: "审计文件", content: value, order: 4}]);
+        break;
+      case 'haiguanUrl':               
+        fields = fields.concat([{title: "海关文件", content: value, order: 5}]);
+        break;
       default:
         break;
     }
@@ -199,27 +205,27 @@ function mapDispatchToProps(dispatch, ownProps) {
       };
       dispatch(templateDetail_getFirstCategories(criteria));
     },
-    saveSecondCategory: (name) => {
+    saveSecondCategory: (name, id) => {
       let params = {
-        templateId: ownProps.routeParams.templateId,
+        category1Id: id,
         name,
       };
-      dispatch(templateDetail_saveFirstCategory(params, (response) => {
+      dispatch(templateDetail_saveSecondCategory(params, (response) => {
         if (response.success) {
           let criteria = {
             "oredCriteria": [
               {
                 "criteria": [
                   {
-                    "condition": "template_id=",
+                    "condition": "category1_id=",
                     "singleValue":true,
-                    "value": ownProps.routeParams.templateId
+                    "value": id
                   }
                 ]
               }
             ]
           };
-          dispatch(templateDetail_getFirstCategories(criteria));
+          dispatch(templateDetail_getSecondCategories(criteria));
         }
       }))
     },
@@ -229,7 +235,7 @@ function mapDispatchToProps(dispatch, ownProps) {
           {
             "criteria": [
               {
-                "condition": "template_id=",
+                "condition": "category1_id=",
                 "singleValue":true,
                 "value": id
               }
@@ -237,7 +243,7 @@ function mapDispatchToProps(dispatch, ownProps) {
           }
         ]
       };
-      dispatch(templateDetail_getFirstCategories(criteria));
+      dispatch(templateDetail_getSecondCategories(criteria));
     },
   }
 }
