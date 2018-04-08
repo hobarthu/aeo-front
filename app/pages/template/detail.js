@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Icon, List, Card, message, Tooltip, Button, Spin, Form, Input, Table } from 'antd'
+import { Collapse, Icon, List, Card, message, Tooltip, Button, Spin, Form, Input, Table } from 'antd'
 import 'style/template.less'
 import EditTemplatePopover from 'containers/edit-template-popover'
 import AddPopover from 'containers/add-popover'
@@ -16,6 +16,7 @@ import {
   AddPopover_open,
 } from 'actions/template'
 
+const Panel = Collapse.Panel;
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -117,6 +118,15 @@ class TemplateDetail extends Component {
         <div>
           <Card title="分类: " type="inner" extra={<a><Icon type="plus" onClick={this.addFirstCategory} /></a>}>
             <FirstCategories />
+              {/* <Panel key='1' header='1'>
+                <p>aa</p>
+              </Panel>
+              <Panel key='2' header='2'>
+                <p>aa</p>
+              </Panel>
+              <Panel key='3' header='3'>
+                <p>aa</p>
+              </Panel> */}
           </Card>
         </div>
       )
@@ -124,8 +134,14 @@ class TemplateDetail extends Component {
 
     const FirstCategories = () => (
       _.map(this.props.firstCategories, (item) => {
+        console.log("item", item);
         return (
-          <Card key={item.id} title={item.name} type="inner" extra={<a><Icon type="plus" onClick={() => this.addSecondCategory(item.id)} /></a>}></Card>
+          <Collapse key={item.id}>
+          {/* <Card key={item.id} title={item.name} type="inner" extra={<a><Icon type="plus" onClick={() => this.addSecondCategory(item.id)} /></a>}></Card> */}
+            <Panel key={item.id} header={<div className='first-category-header'><div>{item.name}</div><div><a><Icon type="plus" onClick={() => this.addSecondCategory(item.id)} /></a></div></div>}>
+              <p>aa</p>
+            </Panel>  
+          </Collapse>        
         )
     }));
 

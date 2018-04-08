@@ -28,9 +28,9 @@ body {background-color: #e7ebee; font-family: 'Open Sans', 'Helvetica Neue', Hel
 #navbar-container { box-shadow: 0 2px 0px -1px rgba(0, 0, 0, 0.05);background-color: @background-color-nav;}
 .navbar-header { float: left; left: 0; position: relative; z-index: 100;}
 .navbar-content { position: relative; left: 0; background-color: #373D41; padding: 0 8px;}
-.navbar-brand { background-color: transparent; color: #fff; padding: 0; height: @g-header-height; position: relative; z-index: 2; overflow: hidden; width: 320px; display: block;}
+.navbar-brand { background-color: transparent; color: black; padding: 0; height: @g-header-height; position: relative; z-index: 2; overflow: hidden; width: 320px; display: block;}
 .navbar-brand:hover,
-.navbar-brand:focus {color: #fff;}
+.navbar-brand:focus {color: black;}
 .brand-title{ display: block; line-height: @g-header-height;}
 .brand-text { display: block; font-size: 20px; font-weight: 600; letter-spacing: 5px; text-align: left;  padding-left: 15px;}
 .navbar-top-links .dropdown-menu-md{ display: none; }
@@ -48,7 +48,13 @@ body {background-color: #e7ebee; font-family: 'Open Sans', 'Helvetica Neue', Hel
 #content-container { position: relative; padding-top: @g-header-height; padding-left: @g-left-width-base;  background-color: white; }
 .page-header { border: 0 none; color: #7c7c7c; font-size: 2.2em; font-weight: 100; margin: 0; padding: 10px 0;}
 .page-header .label { margin-right: 0.5em;}
-#page-content { padding:0;display: flex; flex-direction: column; overflow-x: auto}
+#page-content { 
+  padding:0;
+  display: flex; 
+  flex-direction: column; 
+  overflow: auto; 
+  border-left: solid 1px #fafafa;
+}
 
 #left-nav-container { 
   background-color: @background-color-nav;
@@ -59,9 +65,11 @@ body {background-color: #e7ebee; font-family: 'Open Sans', 'Helvetica Neue', Hel
   top: 0; bottom: 0; z-index: 4; min-height: 100%; 
   .ant-menu {
     background-color: @background-color-nav;
-    color: white;
+    color: black;
     .ant-menu-submenu-title {
       padding-left: @space-big !important;
+      background-color: @background-color-base;
+      margin-top: 0 !important;
     }
   }
   .ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {

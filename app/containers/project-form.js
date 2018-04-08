@@ -71,7 +71,7 @@ function prepareCompanyCategory(companyCategory) {
 
 @Form.create({
     mapPropsToFields: (props) => {
-        if (!_.isEmpty(props.project)) {
+        if (props.isEditMode && !_.isEmpty(props.project)) {
             return {
                 companyName: Form.createFormField({value: props.project.companyName}),
                 year: Form.createFormField({value: props.project.year}),

@@ -22,7 +22,7 @@ class EditTemplatePopover extends React.Component {
           okText="保存"
           footer={null}
         >
-          <TemplateForm isEditMode={true} template={this.props.template} />
+          {this.props.visible && <TemplateForm isEditMode={true} template={this.props.template} />}
         </Modal>
       </div>
     );

@@ -83,25 +83,15 @@ class Templates extends Component {
     });
   }
 
-  // deleteTemplate = (id) => {
-  //   this.props.deleteTemplate(id, (response) => {
-  //     response.success && this.getTemplates();
-  //   })
-  // }
-
   render() {
-    function onChange(pagination, filters, sorter) {
-      console.log('params', pagination, filters, sorter);
-    }
-
     return (
       <div>
         <Table
           rowKey={record => record.id} 
           loading={this.state.isLoading} 
           columns={this.state.columns} 
-          dataSource={this.state.templates} 
-          onChange={onChange} />
+          dataSource={this.state.templates}
+          />
       </div>
     )
   }

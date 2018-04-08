@@ -23,12 +23,9 @@ const { TextArea } = Input;
 
 @Form.create({
     mapPropsToFields: (props) => {
-        console.log("11", this);
-
-        const shengjiFile = new File([""], props.template.shengjiUrl);
-        const haiguanFile = new File([""], props.template.haiguanUrl);
-        
-        if (!_.isEmpty(props.template)) {
+        if (props.isEditMode && !_.isEmpty(props.template)) {
+            const shengjiFile = new File([""], props.template.shengjiUrl);
+            const haiguanFile = new File([""], props.template.haiguanUrl);
             return {
                 name: Form.createFormField({value: props.template.name}),
                 code: Form.createFormField({value: props.template.code}),
@@ -43,22 +40,21 @@ const { TextArea } = Input;
 })
 
 class TemplateForm extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            haiguanFileList: [{
+            haiguanFileList: props.isEditMode && [{
                 uid: -1,
                 name: props.template.haiguanUrl,
                 status: 'done',
                 url: '',
-              }],
-            shengjiFileList: [{
+            }] || [],
+            shengjiFileList: props.isEditMode && [{
                 uid: -2,
                 name: props.template.shengjiUrl,
                 status: 'done',
                 url: '',
-              }],
+            }] || [],
         }     
     }
 
@@ -73,25 +69,23 @@ class TemplateForm extends Component {
                 params.append('shengjiFile', this.props.form.getFieldValue("shengjiFile").file);
                 params.append('haiguanFile', this.props.form.getFieldValue("haiguanFile").file);
 
-                console.log(this.props.form.getFieldValue("haiguanFile"));
-
-                // if (this.props.isEditMode) {
-                //     params.append('id', this.props.template.id);
-                //     this.props.create(params, (response) => {
-                //         message.info("模板更新成功！");
-                //         this.props.refreshTemplateDetail();
-                //     }, (response) => {
-                //         message.warning(response)
-                //     });
-                // } else {
-                //     this.props.create(params, (response) => {
-                //         this.props.form.resetFields();
-                //         this.setState({haiguanFileList: [], shengjiFileList: [],});
-                //         message.info("模板创建成功！");
-                //     }, (response) => {
-                //         message.warning(response)
-                //     });
-                // }          
+                if (this.props.isEditMode) {
+                    params.append('id', this.props.template.id);
+                    this.props.create(params, (response) => {
+                        message.info("模板更新成功！");
+                        this.props.refreshTemplateDetail();
+                    }, (response) => {
+                        message.warning(response)
+                    });
+                } else {
+                    this.props.create(params, (response) => {
+                        this.props.form.resetFields();
+                        this.setState({haiguanFileList: [], shengjiFileList: [],});
+                        message.info("模板创建成功！");
+                    }, (response) => {
+                        message.warning(response)
+                    });
+                }          
             }
         });
     }
